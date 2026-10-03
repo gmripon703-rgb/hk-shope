@@ -1,0 +1,6 @@
+{
+  "name": "NovaDrop - Single Page Store with Cart & Cash on Delivery",
+  "description": "Ultra-lightweight dropshipping storefront featuring a fluid shopping cart, Cash on Delivery (COD), local mobile payments, and instant single-file export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

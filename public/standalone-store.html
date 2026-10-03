@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaDrop - Single Page Store (Cart, Cash on Delivery & Admin Dashboard)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-mono-num { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="bg-[#F8F9FA] text-zinc-900 antialiased min-h-screen flex flex-col pb-16 sm:pb-0">
+
+  <!-- Micro Notice -->
+  <div class="bg-gradient-to-r from-zinc-950 via-zinc-900 to-amber-950 text-zinc-200 text-xs py-1.5 px-4 text-center font-medium">
+    ✓ Cash on Delivery (COD) Nationwide &nbsp;|&nbsp; Pay 0% Advance • Inspect Goods with Courier &nbsp;|&nbsp; 24-48h Delivery
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-zinc-200 shadow-2xs">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-amber-600 to-yellow-400 text-zinc-950 flex items-center justify-center font-black text-sm">
+          ⚡
+        </div>
+        <a href="#" class="text-xl font-black tracking-tight text-zinc-950">NovaDrop</a>
+        <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-full">
+          COD Store
+        </span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-xs font-bold text-zinc-600">
+        <a href="#products" class="hover:text-amber-700">Products</a>
+        <a href="#how-it-works" class="hover:text-amber-700">Cash on Delivery</a>
+        <a href="#payments" class="hover:text-amber-700">Local Gateways</a>
+        <a href="#faq" class="hover:text-amber-700">FAQ</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <button onclick="toggleAdmin(true)" class="flex items-center gap-1.5 px-3 py-2 bg-amber-100 hover:bg-amber-200 text-amber-950 border border-amber-300 text-xs font-bold rounded-xl shadow-2xs transition-all">
+          <span>Admin (<span id="adminOrderBadge">2</span>)</span>
+        </button>
+
+        <button onclick="toggleCart(true)" class="relative flex items-center gap-2 px-3.5 py-2 bg-zinc-950 hover:bg-zinc-800 text-white text-xs sm:text-sm font-bold rounded-xl shadow-md transition-all">
+          <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+          <span class="hidden sm:inline">Cart</span>
+          <span id="headerCartCount" class="bg-amber-400 text-zinc-950 font-black px-1.5 py-0.2 rounded-full text-xs font-mono-num">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 text-center">
+    <span class="text-xs uppercase font-extrabold tracking-widest text-amber-800 bg-amber-100 border border-amber-300 px-3.5 py-1.5 rounded-full shadow-2xs">
+      ⚡ Verified Direct Dropship Selection
+    </span>
+    <h1 class="text-3xl sm:text-5xl font-black text-zinc-950 tracking-tight mt-4 max-w-3xl mx-auto leading-tight">
+      Trending Everyday Innovations. Delivered to Your Door.
+    </h1>
+    <p class="text-sm sm:text-base text-zinc-600 max-w-xl mx-auto mt-3">
+      Zero upfront payment needed. Inspect package with courier and pay via Cash or Local Mobile Wallet (bKash/Nagad).
+    </p>
+
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-3 text-xs font-bold text-zinc-700">
+      <div class="bg-white px-3 py-1.5 rounded-lg border border-zinc-200 flex items-center gap-1.5 shadow-2xs">
+        <span class="text-emerald-600">✓</span> Free Shipping over $50
+      </div>
+      <div class="bg-white px-3 py-1.5 rounded-lg border border-zinc-200 flex items-center gap-1.5 shadow-2xs">
+        <span class="text-emerald-600">✓</span> Doorstep Inspection
+      </div>
+      <div class="bg-white px-3 py-1.5 rounded-lg border border-zinc-200 flex items-center gap-1.5 shadow-2xs">
+        <span class="text-emerald-600">✓</span> 7-Day Exchange Guarantee
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section id="products" class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex-1">
+    <div class="flex items-center justify-between mb-6 border-b border-zinc-200 pb-3">
+      <div>
+        <h2 class="text-xl font-black text-zinc-950">Featured Goods</h2>
+        <p class="text-xs text-zinc-500">Fast shipping via local express courier</p>
+      </div>
+      <div class="text-xs font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
+        COD Available Nationwide
+      </div>
+    </div>
+
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-zinc-200 py-8 mt-12 text-center text-xs text-zinc-500">
+    <p class="font-black text-zinc-900 text-sm">NovaDrop Single-File Storefront</p>
+    <p class="mt-1">Complete shopping cart, Cash on Delivery checkout, and built-in Admin Dashboard.</p>
+    <div class="mt-3 flex justify-center gap-4">
+      <button onclick="toggleAdmin(true)" class="text-amber-800 font-bold underline">Open Admin Dashboard</button>
+      <button onclick="toggleCart(true)" class="text-zinc-700 font-bold underline">View Cart</button>
+    </div>
+    <p class="mt-3 text-zinc-400">© 2026 NovaDrop Direct. All rights reserved.</p>
+  </footer>
+
+  <!-- Mobile Sticky Bar -->
+  <div class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200 px-4 py-2 flex items-center justify-between gap-3 shadow-lg">
+    <button onclick="toggleCart(true)" class="flex-1 py-2 px-3 bg-zinc-100 text-zinc-900 rounded-xl text-xs font-bold">
+      Cart (<span id="mobileCartCount">0</span>) • <span id="mobileCartTotal">$0.00</span>
+    </button>
+    <button onclick="openCheckoutModal()" class="flex-1 py-2 px-3 bg-zinc-950 text-white rounded-xl text-xs font-extrabold shadow-md">
+      Quick COD Checkout
+    </button>
+  </div>
+
+  <!-- Shopping Cart Drawer -->
+  <div id="cartModal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/60" onclick="toggleCart(false)"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-8">
+      <div class="w-screen max-w-md bg-white shadow-2xl flex flex-col">
+        <div class="p-4 border-b border-zinc-200 flex items-center justify-between bg-zinc-950 text-white">
+          <h3 class="text-base font-bold font-heading">Your Shopping Bag (<span id="cartTotalItems">0</span>)</h3>
+          <button onclick="toggleCart(false)" class="text-zinc-400 hover:text-white p-1 text-lg">✕</button>
+        </div>
+        <div id="cartItemsList" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+        <div class="p-4 border-t border-zinc-200 bg-zinc-50 space-y-3">
+          <div class="flex justify-between text-base font-black text-zinc-950">
+            <span>Total Payable:</span>
+            <span id="cartTotal" class="font-mono-num text-amber-700">$0.00</span>
+          </div>
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-[11px] text-amber-950">
+            🚚 <strong>Cash on Delivery (COD):</strong> Pay zero dollars now. Pay courier in cash or mobile wallet when you inspect parcel.
+          </div>
+          <button onclick="openCheckoutModal()" class="w-full py-3 bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl text-xs font-black shadow-md transition-all">
+            Proceed to Cash on Delivery Checkout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 hidden bg-black/65 flex items-center justify-center p-3">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto p-6 relative">
+      <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-zinc-700 font-bold">✕</button>
+      <h3 class="text-lg font-black text-zinc-950">Doorstep Delivery Checkout</h3>
+      <p class="text-xs text-zinc-500 mb-4">No credit card needed. Pay cash or mobile transfer upon arrival.</p>
+
+      <form id="checkoutForm" onsubmit="handlePlaceOrder(event)" class="space-y-3">
+        <input required id="custName" type="text" placeholder="Full Name" class="w-full text-xs p-2.5 border border-zinc-300 rounded-xl">
+        <input required id="custPhone" type="tel" placeholder="Mobile Phone (for courier call)" class="w-full text-xs p-2.5 border border-zinc-300 rounded-xl">
+        <input required id="custAddress" type="text" placeholder="Street, House, Apartment Address" class="w-full text-xs p-2.5 border border-zinc-300 rounded-xl">
+        <input required id="custCity" type="text" placeholder="City / District" class="w-full text-xs p-2.5 border border-zinc-300 rounded-xl">
+
+        <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-950">
+          Payment Method: <strong>Cash on Delivery (Pay to Courier)</strong>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 bg-zinc-950 hover:bg-zinc-800 text-white font-extrabold text-xs rounded-xl shadow-md transition-all mt-2">
+          Confirm Order & Dispatch (<span id="modalFinalPrice">$0.00</span>)
+        </button>
+      </form>
+
+      <div id="orderSuccessBlock" class="hidden text-center py-6 space-y-3">
+        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold">✓</div>
+        <h4 class="text-base font-bold text-zinc-900">Order Confirmed!</h4>
+        <p class="text-xs text-zinc-600">Saved to system. Tracking ID: <strong id="succOrderId" class="font-mono-num"></strong></p>
+        <button onclick="closeCheckoutModal()" class="px-5 py-2 bg-zinc-900 text-white text-xs font-semibold rounded-xl">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard Modal -->
+  <div id="adminModal" class="fixed inset-0 z-50 hidden bg-black/70 flex items-center justify-center p-3">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full max-h-[92vh] overflow-hidden flex flex-col">
+      <div class="p-4 bg-zinc-950 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="font-black text-sm">⚡ NovaDrop Admin Control Center</span>
+          <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold">Live Sync</span>
+        </div>
+        <button onclick="toggleAdmin(false)" class="text-zinc-400 hover:text-white p-1">✕</button>
+      </div>
+
+      <!-- Admin Tabs -->
+      <div class="p-4 overflow-y-auto space-y-6 flex-1 bg-[#FAFAFA]">
+        <!-- Metrics -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <div class="bg-white p-3 rounded-xl border border-zinc-200">
+            <span class="text-[11px] text-zinc-500 block">Total Revenue</span>
+            <strong id="admRevenue" class="text-lg font-black text-emerald-700 font-mono-num">$109.39</strong>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-zinc-200">
+            <span class="text-[11px] text-zinc-500 block">Total Orders</span>
+            <strong id="admOrdersCount" class="text-lg font-black text-zinc-950 font-mono-num">2</strong>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-zinc-200">
+            <span class="text-[11px] text-zinc-500 block">COD Pending</span>
+            <strong id="admPendingCount" class="text-lg font-black text-amber-700 font-mono-num">1</strong>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-zinc-200">
+            <span class="text-[11px] text-zinc-500 block">Active Products</span>
+            <strong id="admProductsCount" class="text-lg font-black text-purple-700 font-mono-num">4</strong>
+          </div>
+        </div>
+
+        <!-- Add Product Box -->
+        <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-2xs space-y-3">
+          <h4 class="font-black text-xs uppercase tracking-wider text-zinc-900">Add New Product to Live Store</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <input id="addTitle" type="text" placeholder="Product Title" class="text-xs p-2 border rounded-lg">
+            <input id="addPrice" type="number" step="0.01" placeholder="Selling Price ($)" class="text-xs p-2 border rounded-lg">
+            <input id="addImage" type="text" placeholder="Image URL" class="text-xs p-2 border rounded-lg" value="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500&auto=format&fit=crop&q=60">
+          </div>
+          <button onclick="adminAddProduct()" class="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold transition-all">
+            + Publish to Storefront
+          </button>
+        </div>
+
+        <!-- Orders Table -->
+        <div class="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-2xs">
+          <div class="p-3 border-b border-zinc-100 font-bold text-xs text-zinc-900">Live Customer Orders</div>
+          <div id="adminOrdersList" class="divide-y divide-zinc-100 text-xs"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let products = [
+      { id: 'p1', name: 'AeroTitan X Smartwatch', price: 49.99, origPrice: 89.99, image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60', desc: 'Grade 5 Aerospace Titanium · AMOLED Display · 14-Day Battery', badge: 'Trending' },
+      { id: 'p2', name: 'AcousticPulse ANC Pods', price: 34.50, origPrice: 59.99, image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60', desc: '42dB Hybrid Noise Cancellation · Hi-Res Audio · 36h Case', badge: 'Best Seller' },
+      { id: 'p3', name: 'MagFold 3-in-1 Dock', price: 29.90, origPrice: 48.00, image: 'https://images.unsplash.com/photo-1586105251261-72a756497a11?w=500&auto=format&fit=crop&q=60', desc: '15W MagSafe Fast Charge · Foldable Travel Design · Aluminum', badge: 'Viral Pick' },
+      { id: 'p4', name: 'OrthoRest Cervical Pillow', price: 38.00, origPrice: 65.00, image: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=500&auto=format&fit=crop&q=60', desc: 'Slow-Rebound Memory Foam · Neck Alignment · Cooling Mesh', badge: 'Pain Relief' }
+    ];
+
+    let orders = [
+      { orderId: 'ND-92418', name: 'Rashidul Karim', phone: '01719283746', city: 'Dhaka', total: 44.99, status: 'Confirmed (COD)' },
+      { orderId: 'ND-88102', name: 'Nusrat Jahan', phone: '01828394019', city: 'Chittagong', total: 64.40, status: 'Dispatched (bKash)' }
+    ];
+
+    let cart = [];
+
+    function renderProducts() {
+      document.getElementById('productGrid').innerHTML = products.map(p => `
+        <div class="bg-white rounded-3xl border border-zinc-200 overflow-hidden shadow-2xs hover:shadow-lg transition-all flex flex-col justify-between">
+          <div>
+            <div class="relative aspect-4/3 bg-zinc-100 overflow-hidden">
+              <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover">
+              <span class="absolute top-2 left-2 bg-zinc-950 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-md">${p.badge || 'Dropship'}</span>
+            </div>
+            <div class="p-4">
+              <h3 class="font-extrabold text-sm text-zinc-950">${p.name}</h3>
+              <p class="text-xs text-zinc-500 mt-1 line-clamp-2">${p.desc}</p>
+              <div class="mt-3 flex items-baseline gap-2">
+                <span class="text-lg font-black text-zinc-950 font-mono-num">$${p.price.toFixed(2)}</span>
+                <span class="text-xs text-zinc-400 line-through font-mono-num">$${p.origPrice ? p.origPrice.toFixed(2) : (p.price*1.4).toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 pt-0 space-y-1.5">
+            <button onclick="addToCart('${p.id}', true)" class="w-full py-2 bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-extrabold rounded-xl shadow-xs transition-colors">
+              Buy with Cash on Delivery
+            </button>
+            <button onclick="addToCart('${p.id}', false)" class="w-full py-1.5 bg-zinc-100 text-zinc-800 text-xs font-semibold rounded-xl hover:bg-zinc-200 transition-colors">
+              Add to Bag
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addToCart(id, openCheckout) {
+      const prod = products.find(p => p.id === id);
+      const existing = cart.find(c => c.id === id);
+      if (existing) existing.qty += 1;
+      else cart.push({ ...prod, qty: 1 });
+      updateCartUI();
+      if (openCheckout) openCheckoutModal();
+      else toggleCart(true);
+    }
+
+    function changeQty(id, delta) {
+      const it = cart.find(c => c.id === id);
+      if (!it) return;
+      it.qty += delta;
+      if (it.qty <= 0) cart = cart.filter(c => c.id !== id);
+      updateCartUI();
+    }
+
+    function toggleCart(show) {
+      document.getElementById('cartModal').classList.toggle('hidden', !show);
+    }
+
+    function toggleAdmin(show) {
+      document.getElementById('adminModal').classList.toggle('hidden', !show);
+      renderAdmin();
+    }
+
+    function updateCartUI() {
+      const count = cart.reduce((a, b) => a + b.qty, 0);
+      const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+      document.getElementById('headerCartCount').textContent = count;
+      document.getElementById('cartTotalItems').textContent = count;
+      document.getElementById('mobileCartCount').textContent = count;
+      document.getElementById('mobileCartTotal').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('cartTotal').textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById('modalFinalPrice').textContent = `$${subtotal.toFixed(2)}`;
+
+      const list = document.getElementById('cartItemsList');
+      if (cart.length === 0) {
+        list.innerHTML = '<div class="text-center py-10 text-xs text-zinc-400">Cart is empty</div>';
+        return;
+      }
+      list.innerHTML = cart.map(it => `
+        <div class="flex items-center justify-between gap-3 p-2.5 bg-zinc-50 rounded-xl border border-zinc-200">
+          <img src="${it.image}" class="w-12 h-12 object-cover rounded-lg bg-white border border-zinc-200">
+          <div class="flex-1 min-w-0">
+            <h5 class="text-xs font-bold text-zinc-950 truncate">${it.name}</h5>
+            <div class="text-[11px] font-mono-num text-zinc-600">$${it.price.toFixed(2)}</div>
+          </div>
+          <div class="flex items-center border border-zinc-300 rounded-lg bg-white">
+            <button onclick="changeQty('${it.id}', -1)" class="px-2 py-0.5 text-xs font-bold">-</button>
+            <span class="px-2 text-xs font-black font-mono-num">${it.qty}</span>
+            <button onclick="changeQty('${it.id}', 1)" class="px-2 py-0.5 text-xs font-bold">+</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCheckoutModal() {
+      if (cart.length === 0 && products.length > 0) addToCart(products[0].id, false);
+      toggleCart(false);
+      document.getElementById('checkoutForm').classList.remove('hidden');
+      document.getElementById('orderSuccessBlock').classList.add('hidden');
+      document.getElementById('checkoutModal').classList.remove('hidden');
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').classList.add('hidden');
+    }
+
+    function handlePlaceOrder(e) {
+      e.preventDefault();
+      const orderId = 'ND-' + Math.floor(10000 + Math.random() * 90000);
+      const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+      orders.unshift({
+        orderId,
+        name: document.getElementById('custName').value,
+        phone: document.getElementById('custPhone').value,
+        city: document.getElementById('custCity').value,
+        total,
+        status: 'Confirmed (COD)'
+      });
+
+      document.getElementById('succOrderId').textContent = '#' + orderId;
+      document.getElementById('checkoutForm').classList.add('hidden');
+      document.getElementById('orderSuccessBlock').classList.remove('hidden');
+      cart = [];
+      updateCartUI();
+      renderAdmin();
+    }
+
+    function renderAdmin() {
+      const revenue = orders.reduce((sum, o) => sum + o.total, 0);
+      document.getElementById('admRevenue').textContent = `$${revenue.toFixed(2)}`;
+      document.getElementById('admOrdersCount').textContent = orders.length;
+      document.getElementById('adminOrderBadge').textContent = orders.length;
+      document.getElementById('admProductsCount').textContent = products.length;
+
+      document.getElementById('adminOrdersList').innerHTML = orders.map(o => `
+        <div class="p-3 flex items-center justify-between">
+          <div>
+            <span class="font-bold text-zinc-950 font-mono-num">#${o.orderId}</span> · ${o.name} (${o.phone})
+            <div class="text-[11px] text-zinc-400">${o.city} · ${o.status}</div>
+          </div>
+          <span class="font-black font-mono-num text-zinc-950">$${o.total.toFixed(2)}</span>
+        </div>
+      `).join('');
+    }
+
+    function adminAddProduct() {
+      const title = document.getElementById('addTitle').value.trim();
+      const price = parseFloat(document.getElementById('addPrice').value);
+      const image = document.getElementById('addImage').value.trim();
+      if (!title || !price) return alert('Enter product title and price');
+
+      products.unshift({
+        id: 'p-' + Date.now(),
+        name: title,
+        price: price,
+        origPrice: price * 1.5,
+        image: image || 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=500',
+        desc: 'New dropship item available with Cash on Delivery.',
+        badge: 'New'
+      });
+
+      renderProducts();
+      renderAdmin();
+      alert('Product added to live store!');
+      document.getElementById('addTitle').value = '';
+      document.getElementById('addPrice').value = '';
+    }
+
+    renderProducts();
+    updateCartUI();
+    renderAdmin();
+  </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+{
+  "entities": {
+    "product": {
+      "title": "Product",
+      "description": "Storefront product inventory item",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "title": { "type": "string", "maxLength": 150 },
+        "price": { "type": "number" },
+        "compareAtPrice": { "type": "number" },
+        "rating": { "type": "number" },
+        "reviewsCount": { "type": "number" },
+        "tag": { "type": "string", "maxLength": 50 },
+        "category": { "type": "string", "maxLength": 50 },
+        "image": { "type": "string", "maxLength": 500 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "stock": { "type": "number" },
+        "salesCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "price", "category", "image"]
+    },
+    "order": {
+      "title": "Order",
+      "description": "Customer order placed in storefront",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 30 },
+        "address": { "type": "string", "maxLength": 300 },
+        "city": { "type": "string", "maxLength": 100 },
+        "subtotal": { "type": "number" },
+        "shipping": { "type": "number" },
+        "total": { "type": "number" },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "processing", "shipped", "delivered", "cancelled"]
+        },
+        "paymentMethod": { "type": "string", "maxLength": 20 },
+        "notes": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "customerName", "phone", "address", "total", "status", "paymentMethod"]
+    },
+    "admin": {
+      "title": "Admin",
+      "description": "Administrator account role document",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 120 },
+        "role": { "type": "string", "maxLength": 20 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "role"]
+    },
+    "storeSettings": {
+      "title": "StoreSettings",
+      "description": "Global storefront settings and configuration",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string", "maxLength": 100 },
+        "currency": { "type": "string", "maxLength": 10 },
+        "shippingFee": { "type": "number" },
+        "freeShippingThreshold": { "type": "number" },
+        "phoneSupport": { "type": "string", "maxLength": 30 },
+        "emailSupport": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["storeName", "currency", "shippingFee"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "product",
+      "description": "Public catalog of products"
+    },
+    "/orders/{orderId}": {
+      "schema": "order",
+      "description": "Customer purchase orders"
+    },
+    "/admins/{adminId}": {
+      "schema": "admin",
+      "description": "List of authorized administrator user accounts"
+    },
+    "/settings/{settingId}": {
+      "schema": "storeSettings",
+      "description": "Store configuration and operational details"
+    }
+  }
+}
